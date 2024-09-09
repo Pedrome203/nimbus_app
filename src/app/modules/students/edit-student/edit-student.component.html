@@ -30,9 +30,14 @@
                         <mat-error *ngIf="form.invalid">Este campo es obligatorio y númerico</mat-error>
                     </mat-form-field>
                 </mat-grid-tile>
+                <mat-grid-tile [colspan]="colMedium" [rowspan]="1">
+
+                    <span>Creditos totales: </span><span>{{student.total_credits}}</span>
+
+                </mat-grid-tile>
             </mat-grid-list>
-            <app-subjects-to-student [currentSubjects]="student.Subjects!"
-                [id_student]="student.id"></app-subjects-to-student>
+            <app-subjects-to-student [currentSubjects]="student.Subjects!" [id_student]="student.id"
+                (subjectUpdated)="updateSubjects()" [loading]="loadingSubjects"></app-subjects-to-student>
             <mat-grid-list cols="12" rowHeight="85px">
                 <mat-grid-tile [colspan]="colBig" [rowspan]="1">
                     <div class="item-spacer"></div>

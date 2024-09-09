@@ -88,6 +88,7 @@ export class EditSubjectComponent implements OnInit {
         this._subjectService.getSubject(this.id_subject).subscribe({
             next: (resp) => {
                 this.subject = { ...resp };
+
             },
             complete: () => {
                 this.setFeilds();
@@ -108,40 +109,51 @@ export class EditSubjectComponent implements OnInit {
     }
 
     save() {
-        this.loading = true;
-        this._subjectService
-            .updateSubject(
-                this.id_subject,
-                this.form.value.name,
-                this.form.value.credits
-            )
-            .subscribe({
-                next: (resp) => {
-                    console.log(resp);
-                    Swal.fire({
-                        title: 'OK',
-                        text: resp,
-                        icon: 'success',
-                        confirmButtonColor: '#58B1F7',
-                        heightAuto: false,
-                    });
-                },
-                complete: () => {
-                    this.loading = false;
-                    this.updateSuccess.emit(true);
-                    this.loadData();
-                },
-                error: (err) => {
-                    Swal.fire({
-                        title: 'ERROR',
-                        text: err.error.message,
-                        icon: 'error',
-                        confirmButtonColor: '#58B1F7',
-                        heightAuto: false,
-                    });
-                    this.loading = false;
-                },
+        if (this.form.value.name == this.subject.name && this.form.value.credits == this.subject.credits) {
+            Swal.fire({
+                title: 'Erro',
+                text: 'No haz editado ningun campo',
+                icon: 'error',
+                confirmButtonColor: '#58B1F7',
+                heightAuto: false,
             });
+        } else {
+            this.loading = true;
+            this._subjectService
+                .updateSubject(
+                    this.id_subject,
+                    this.form.value.name,
+                    this.form.value.credits
+                )
+                .subscribe({
+                    next: (resp) => {
+                        console.log(resp);
+                        Swal.fire({
+                            title: 'OK',
+                            text: resp,
+                            icon: 'success',
+                            confirmButtonColor: '#58B1F7',
+                            heightAuto: false,
+                        });
+                    },
+                    complete: () => {
+                        this.loading = false;
+                        this.updateSuccess.emit(true);
+                        this.loadData();
+                    },
+                    error: (err) => {
+                        Swal.fire({
+                            title: 'ERROR',
+                            text: err.error.message,
+                            icon: 'error',
+                            confirmButtonColor: '#58B1F7',
+                            heightAuto: false,
+                        });
+                        this.loading = false;
+                    },
+                });
+        }
+
     }
 
     closeDialog() {
