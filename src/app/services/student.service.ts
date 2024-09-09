@@ -11,6 +11,7 @@ const base_url = environment.base_url;
     providedIn: 'root',
 })
 export class StudentService {
+
     constructor(private http: HttpClient) { }
 
     get path(): string {
@@ -35,6 +36,27 @@ export class StudentService {
             .pipe(map((resp: any) => resp.message));
     }
 
+    addSubjectInStudent(
+        id_student: number,
+        id_subject: number
+    ) {
+        const url = `${base_url}/students-subjects/`;
+        console.log(url)
+        return this.http
+            .post(url, { id_student, id_subject }, this.headers)
+            .pipe(map((resp: any) => resp.message));
+    }
+
+    removeSubjectInStudent(
+        id_student_subject: number,
+    ) {
+        const url = `${base_url}/students-subjects/${id_student_subject}`;
+        console.log(url)
+        return this.http
+            .delete(url, this.headers)
+            .pipe(map((resp: any) => resp.message));
+    }
+
     updateStudent(
         id: number,
         name: string,
@@ -46,7 +68,7 @@ export class StudentService {
             .pipe(map((resp: any) => resp.message));
     }
 
-    deletEvent(id: number) {
+    deleteStudent(id: number) {
         const url = `${base_url}/${this.path}/${id}`;
         return this.http
             .delete(url, this.headers)

@@ -5,6 +5,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Subject } from 'src/app/models/subject.model';
 import { SubjectService } from 'src/app/services/subject.service';
+import { CreateSubjectComponent } from '../create-subject/create-subject.component';
+import { EditSubjectComponent } from '../edit-subject/edit-subject.component';
+import Swal from 'sweetalert2';
 
 
 
@@ -93,86 +96,78 @@ export class ListSubjectsComponent implements OnInit {
       });
   }
 
+  create() {
+    const createSongDialogRef = this._dialog.open(CreateSubjectComponent, {
+      width: this.modalWidth,
+      height: 'auto',
+    });
+    createSongDialogRef.componentInstance.createSuccess.subscribe(
+      (response) => {
+        console.log(response);
+        if (response) {
+          this.loadData();
+        }
+      }
+    );
+  }
+
+  update(subject: Subject) {
+    const updateSongDialogRef = this._dialog.open(EditSubjectComponent, {
+      width: this.modalWidth,
+      height: 'auto',
+      data: subject.id,
+    });
+    updateSongDialogRef.componentInstance.updateSuccess.subscribe(
+      (response) => {
+
+        if (response) {
+          this.loadData();
+        }
+      }
+    );
+  }
 
 
-
-
-
-
-
-
-  // createSong() {
-  //   const createSongDialogRef = this._dialog.open(CreateSongComponent, {
-  //     width: this.modalWidth,
-  //     height: 'auto',
-  //   });
-  //   createSongDialogRef.componentInstance.createSongSuccess.subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       if (response) {
-  //         this.loadData();
-  //       }
-  //     }
-  //   );
-  // }
-
-  // updateSong(song: Song) {
-  //   const updateSongDialogRef = this._dialog.open(UpdateSongComponent, {
-  //     width: this.modalWidth,
-  //     height: 'auto',
-  //     data: song.id,
-  //   });
-  //   updateSongDialogRef.componentInstance.updateSongSuccess.subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       if (response) {
-  //         this.loadData();
-  //       }
-  //     }
-  //   );
-  // }
-
-
-  // deleteSong(song: Song) {
-  //   Swal.fire({
-  //     title: 'Eliminar',
-  //     text: '¿Esta seguro de eliminar la canción ' + song.name + ' ?',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Ok',
-  //     cancelButtonText: 'Cancelar',
-  //     confirmButtonColor: '#58B1F7',
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       this.loading = true;
-  //       this._songService.deletSong(song.id).subscribe({
-  //         next: (resp) => {
-  //           Swal.fire({
-  //             title: 'OK',
-  //             text: resp,
-  //             icon: 'success',
-  //             confirmButtonColor: '#58B1F7',
-  //             heightAuto: false,
-  //           });
-  //         },
-  //         complete: () => {
-  //           this.loadData();
-  //         },
-  //         error: (err) => {
-  //           console.log(err);
-  //           Swal.fire({
-  //             title: 'ERROR',
-  //             text: err.error.message,
-  //             icon: 'error',
-  //             confirmButtonColor: '#58B1F7',
-  //             heightAuto: false,
-  //           });
-  //         },
-  //       });
-  //     }
-  //   });
-  // }
+  delete(subject: Subject) {
+    Swal.fire({
+      title: 'Eliminar',
+      text: '¿Esta seguro de eliminar la materia de ' + subject.name + ' ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ok',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#58B1F7',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
+        this._subjectService.deleteSubject(subject.id).subscribe({
+          next: (resp) => {
+            Swal.fire({
+              title: 'OK',
+              text: resp,
+              icon: 'success',
+              confirmButtonColor: '#58B1F7',
+              heightAuto: false,
+            });
+          },
+          complete: () => {
+            this.loadData();
+          },
+          error: (err) => {
+            console.log(err);
+            Swal.fire({
+              title: 'ERROR',
+              text: err.error.message,
+              icon: 'error',
+              confirmButtonColor: '#58B1F7',
+              heightAuto: false,
+            });
+          },
+        });
+      }
+    });
+  }
 
   loadData() {
     this.loading = true;

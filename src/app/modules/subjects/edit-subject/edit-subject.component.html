@@ -1,0 +1,41 @@
+<form [formGroup]="form" (ngSubmit)="save()">
+    <mat-card>
+        <mat-card-header class="secondary header-modal">
+            <div class="item-spacer"></div>
+            <span> Editar Materia </span>
+            <div class="item-spacer"></div>
+            <span class="icon-close-modal" (click)="closeDialog()">&#10008;</span>
+        </mat-card-header>
+
+        <mat-card-content class="card-content" *ngIf="!loading">
+            <mat-grid-list cols="12" rowHeight="85px">
+                <mat-grid-tile [colspan]="colBig" [rowspan]="1">
+                    <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>Nombre </mat-label>
+                        <input matInput formControlName="name" />
+                        <mat-error *ngIf="form.invalid">Este campo es obligatorio</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+                <mat-grid-tile [colspan]="colBig" [rowspan]="1">
+                    <mat-form-field appearance="outline" floatLabel="always">
+                        <mat-label>Creditos </mat-label>
+                        <input matInput formControlName="credits" />
+                        <mat-error *ngIf="form.invalid">Este campo es obligatorio y númerico</mat-error>
+                    </mat-form-field>
+                </mat-grid-tile>
+
+
+                <mat-grid-tile [colspan]="colBig" [rowspan]="1">
+                    <div class="item-spacer"></div>
+                    <button mat-raised-button type="submit" class="btnPrimary" style="height: 80%; margin-top: 10px"
+                        [disabled]="form.invalid">
+                        <mat-icon class="icon-size">save</mat-icon>Guardar
+                    </button>
+                </mat-grid-tile>
+            </mat-grid-list>
+        </mat-card-content>
+
+        <app-loading *ngIf="loading"></app-loading>
+
+    </mat-card>
+</form>

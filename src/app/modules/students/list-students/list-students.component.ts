@@ -7,6 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { Student } from 'src/app/models/student.model';
 import { StudentService } from 'src/app/services/student.service';
+import { CreateStudentComponent } from '../create-student/create-student.component';
+import Swal from 'sweetalert2';
+import { EditStudentComponent } from '../edit-student/edit-student.component';
 
 
 @Component({
@@ -95,87 +98,78 @@ export class ListStudentsComponent implements OnInit {
       });
   }
 
+  create() {
+    const createSongDialogRef = this._dialog.open(CreateStudentComponent, {
+      width: this.modalWidth,
+      height: 'auto',
+    });
+    createSongDialogRef.componentInstance.createSuccess.subscribe(
+      (response) => {
+        console.log(response);
+        if (response) {
+          this.loadData();
+        }
+      }
+    );
+  }
+
+  update(student: Student) {
+    const updateSongDialogRef = this._dialog.open(EditStudentComponent, {
+      width: this.modalWidth,
+      height: 'auto',
+      data: student.id,
+    });
+    updateSongDialogRef.componentInstance.updateSuccess.subscribe(
+      (response) => {
+
+        if (response) {
+          this.loadData();
+        }
+      }
+    );
+  }
 
 
-
-
-
-
-
-
-  // createSong() {
-  //   const createSongDialogRef = this._dialog.open(CreateSongComponent, {
-  //     width: this.modalWidth,
-  //     height: 'auto',
-  //   });
-  //   createSongDialogRef.componentInstance.createSongSuccess.subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       if (response) {
-  //         this.loadData();
-  //       }
-  //     }
-  //   );
-  // }
-
-  // updateSong(song: Song) {
-  //   const updateSongDialogRef = this._dialog.open(UpdateSongComponent, {
-  //     width: this.modalWidth,
-  //     height: 'auto',
-  //     data: song.id,
-  //   });
-  //   updateSongDialogRef.componentInstance.updateSongSuccess.subscribe(
-  //     (response) => {
-  //       console.log(response);
-  //       if (response) {
-  //         this.loadData();
-  //       }
-  //     }
-  //   );
-  // }
-
-
-  // deleteSong(song: Song) {
-  //   Swal.fire({
-  //     title: 'Eliminar',
-  //     text: '¿Esta seguro de eliminar la canción ' + song.name + ' ?',
-  //     icon: 'warning',
-  //     showCancelButton: true,
-  //     confirmButtonText: 'Ok',
-  //     cancelButtonText: 'Cancelar',
-  //     confirmButtonColor: '#58B1F7',
-  //     reverseButtons: true,
-  //   }).then((result) => {
-  //     if (result.isConfirmed) {
-  //       this.loading = true;
-  //       this._songService.deletSong(song.id).subscribe({
-  //         next: (resp) => {
-  //           Swal.fire({
-  //             title: 'OK',
-  //             text: resp,
-  //             icon: 'success',
-  //             confirmButtonColor: '#58B1F7',
-  //             heightAuto: false,
-  //           });
-  //         },
-  //         complete: () => {
-  //           this.loadData();
-  //         },
-  //         error: (err) => {
-  //           console.log(err);
-  //           Swal.fire({
-  //             title: 'ERROR',
-  //             text: err.error.message,
-  //             icon: 'error',
-  //             confirmButtonColor: '#58B1F7',
-  //             heightAuto: false,
-  //           });
-  //         },
-  //       });
-  //     }
-  //   });
-  // }
-
+  delete(student: Student) {
+    Swal.fire({
+      title: 'Eliminar',
+      text: '¿Esta seguro de eliminar al estudiante ' + student.name + ' ?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Ok',
+      cancelButtonText: 'Cancelar',
+      confirmButtonColor: '#58B1F7',
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.loading = true;
+        this._studentService.deleteStudent(student.id).subscribe({
+          next: (resp) => {
+            Swal.fire({
+              title: 'OK',
+              text: resp,
+              icon: 'success',
+              confirmButtonColor: '#58B1F7',
+              heightAuto: false,
+            });
+          },
+          complete: () => {
+            this.loadData();
+          },
+          error: (err) => {
+            console.log(err);
+            Swal.fire({
+              title: 'ERROR',
+              text: err.error.message,
+              icon: 'error',
+              confirmButtonColor: '#58B1F7',
+              heightAuto: false,
+            });
+          },
+        });
+      }
+    });
+  }
   loadData() {
     this.loading = true;
     this._studentService.getStudents()

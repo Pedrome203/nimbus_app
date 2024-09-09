@@ -6,11 +6,15 @@ import { LoadingComponent } from 'src/app/core/components/loading/loading.compon
 
 import { ListSubjectsComponent } from './list-subjects/list-subjects.component';
 import { SubjectsRoutingModule } from './subjects.routing.module';
+import { CreateSubjectComponent } from './create-subject/create-subject.component';
+import { EditSubjectComponent } from './edit-subject/edit-subject.component';
 
 
 @NgModule({
     declarations: [
         ListSubjectsComponent,
+        CreateSubjectComponent,
+        EditSubjectComponent
 
     ],
     imports: [
